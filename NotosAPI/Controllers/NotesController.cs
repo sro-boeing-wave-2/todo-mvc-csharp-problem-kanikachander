@@ -24,35 +24,36 @@ namespace NotosAPI.Controllers
 
         // GET: api/Notes
         [HttpGet]
-        public async Task<IActionResult> GetNotes([FromQuery] string title, [FromQuery] List<string> label, [FromQuery] bool? isPinned)
+        public async Task<IActionResult> GetNotes([FromQuery] string title, [FromQuery] string label, [FromQuery] bool? isPinned)
         {
-            if (string.IsNullOrEmpty(title) && !label.Any() && !isPinned.HasValue)
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                if ((title != null) && (label == null) && !isPinned.HasValue)
+                {
+                    var note = await _context.Notes.Include(p => p.Label).Include(p => p.CheckedList)
+                    .Where(p => p.Title == title).ToListAsync();
+                    return Ok(note);
+                }
+
+                if ((title == null) && (label == null) && isPinned.HasValue)
+                {
+                    var note = await _context.Notes.Include(p => p.Label).Include(p => p.CheckedList)
+                    .Where(p => p.Pinned == isPinned).ToListAsync();
+                    return Ok(note);
+                }
+
+                if ((title == null) && (label != null) && !isPinned.HasValue)
+                {
+                    var notes = await _context.Notes.Include(p => p.Label).Include(p => p.CheckedList)
+                    .Where(x => x.Label.Any(y => y.Label == label)).ToListAsync();
+                    return Ok(notes);
+                }
                 return Ok(_context.Notes.Include(p => p.Label).Include(p => p.CheckedList));
             }
-
-            else if (!string.IsNullOrEmpty(title) && !label.Any() && !isPinned.HasValue)
-            {
-                var note = await _context.Notes.Include(p => p.Label).Include(p => p.CheckedList)
-                .Where(p => p.Title == title).ToListAsync();
-                return Ok(note);
-            }
-
-            else if (!string.IsNullOrEmpty(title) && label.Any() && isPinned.HasValue)
-            {
-                var note = await _context.Notes.Include(p => p.Label).Include(p => p.CheckedList)
-                .Where(p => p.Pinned == isPinned).ToListAsync();
-            return Ok(note);
-            }
-
-            else if (string.IsNullOrEmpty(title) && label.Any() && !isPinned.HasValue)
-            {
-                var note = await _context.Notes.Include(p => p.Label).Include(p => p.CheckedList)
-                .Where(x => x.Label.Any(y => y.Label == label))
-                return Ok(note);
-            }
-
-
         }
 
         // GET: api/Notes/5
@@ -74,28 +75,7 @@ namespace NotosAPI.Controllers
 
             return Ok(notes);
         }
-
-        //GET: api/Notes? title = "first" [FromQuery(Name = "title")]
-        //[Route("SearchByTitle/{title}")]
-       
-       //[HttpGet("{title}")]
-       // public async Task<IActionResult> GetNotesByTitle(string title)
-       // {
-       //     if (!ModelState.IsValid)
-       //     {
-       //         return BadRequest(ModelState);
-       //     }
-
-       //     var notes = await _context.Notes.Include(p => p.Label).Include(p => p.CheckedList)
-       //         .FirstOrDefaultAsync(p => p.Title == title);
-       //     //p => p.Title == title
-       //     if (notes == null)
-       //     {
-       //         return NotFound();
-       //     }
-
-       //     return Ok(notes);
-       // }
+        
 
         // PUT: api/Notes/5
         //[Route("/{id}")]
@@ -165,6 +145,29 @@ namespace NotosAPI.Controllers
             }
 
             _context.Notes.Remove(notes);
+            await _context.SaveChangesAsync();
+
+            return Ok(notes);
+        }
+        
+        [HttpDelete]
+        public async Task<IActionResult> DeleteNotes([FromQuery] string title)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var notes = await _context.Notes.Include(p => p.Label).Include(p => p.CheckedList).Where(p => p.Title == title).ToListAsync();
+            if (notes == null)
+            {
+                return NotFound();
+            }
+            foreach(var i in notes)
+            {
+                _context.Notes.Remove(i);
+            }
+            
             await _context.SaveChangesAsync();
 
             return Ok(notes);
