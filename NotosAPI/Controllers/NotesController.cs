@@ -73,12 +73,28 @@ namespace NotosAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(notes).State = EntityState.Modified;
-
             try
             {
+                //var originalNote = await _context.Notes.Include(p => p.Label).Include(p => p.CheckedList).SingleOrDefaultAsync(p => p.ID == id);
+                //if (originalNote != null)
+                //{
+                //    originalNote.Title = notes.Title;
+                //    originalNote.Text = notes.Text;
+                //    originalNote.Pinned = notes.Pinned;
+                //    for (var i = 0; i < originalNote.Label.Count; i++)
+                //    {
+                //        originalNote.Label[i].Label = notes.Label[i].Label;
+                //    }
+                //    for (var i = 0; i < originalNote.CheckedList.Count; i++)
+                //    {
+                //        originalNote.CheckedList[i].ListItem = notes.CheckedList[i].ListItem;
+                //    }
+                //}
+                //_context.Entry(originalNote).State = EntityState.Modified;
+                _context.Notes.Update(notes);
                 await _context.SaveChangesAsync();
             }
+            
             catch (DbUpdateConcurrencyException)
             {
                 if (!NotesExists(id))
@@ -91,7 +107,7 @@ namespace NotosAPI.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok();
         }
 
         // POST: api/Notes
