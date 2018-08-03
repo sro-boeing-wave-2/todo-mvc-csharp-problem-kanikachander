@@ -31,28 +31,9 @@ namespace NotosAPI.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-
-                if ((title != null) && (label == null) && !isPinned.HasValue)
-                {
                     var note = await _context.Notes.Include(p => p.Label).Include(p => p.CheckedList)
-                    .Where(p => p.Title == title).ToListAsync();
+                    .Where(p => (p.Title == title || title == null) && (p.Pinned == isPinned || !isPinned.HasValue) && (p.Label.Any(y => y.Label == label) || label == null)).ToListAsync();
                     return Ok(note);
-                }
-
-                if ((title == null) && (label == null) && isPinned.HasValue)
-                {
-                    var note = await _context.Notes.Include(p => p.Label).Include(p => p.CheckedList)
-                    .Where(p => p.Pinned == isPinned).ToListAsync();
-                    return Ok(note);
-                }
-
-                if ((title == null) && (label != null) && !isPinned.HasValue)
-                {
-                    var notes = await _context.Notes.Include(p => p.Label).Include(p => p.CheckedList)
-                    .Where(x => x.Label.Any(y => y.Label == label)).ToListAsync();
-                    return Ok(notes);
-                }
-                return Ok(_context.Notes.Include(p => p.Label).Include(p => p.CheckedList));
             }
         }
 
