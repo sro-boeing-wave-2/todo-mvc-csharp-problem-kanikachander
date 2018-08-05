@@ -1,0 +1,14 @@
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI\bin\Debug\netcoreapp2.1\NotesAPI.deps.json
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI\bin\Debug\netcoreapp2.1\NotesAPI.runtimeconfig.json
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI\bin\Debug\netcoreapp2.1\NotesAPI.runtimeconfig.dev.json
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI\bin\Debug\netcoreapp2.1\NotesAPI.dll
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI\obj\Debug\netcoreapp2.1\NotesAPI.csprojAssemblyReference.cache
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI\obj\Debug\netcoreapp2.1\NotesAPI.csproj.CoreCompileInputs.cache
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI\obj\Debug\netcoreapp2.1\NotesAPI.RazorAssemblyInfo.cache
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI\obj\Debug\netcoreapp2.1\NotesAPI.RazorAssemblyInfo.cs
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI\obj\Debug\netcoreapp2.1\NotesAPI.AssemblyInfoInputs.cache
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI\obj\Debug\netcoreapp2.1\NotesAPI.AssemblyInfo.cs
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI\obj\Debug\netcoreapp2.1\NotesAPI.RazorTargetAssemblyInfo.cache
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI\bin\Debug\netcoreapp2.1\NotesAPI.pdb
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI\obj\Debug\netcoreapp2.1\NotesAPI.dll
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI\obj\Debug\netcoreapp2.1\NotesAPI.pdb
