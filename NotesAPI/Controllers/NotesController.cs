@@ -10,6 +10,7 @@ using NotesAPI.Models;
 
 namespace NotesAPI.Controllers
 {
+    //[Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     public class NotesController : ControllerBase
@@ -37,7 +38,7 @@ namespace NotesAPI.Controllers
         }
 
         // GET: api/Notes/5
-        [Route("{id}")]
+        //[Route("{id}")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetNotes([FromRoute] int id)
         {
