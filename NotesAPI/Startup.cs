@@ -19,16 +19,24 @@ namespace NotesAPI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment currentEnvironment)
         {
             Configuration = configuration;
+            _currentEnvironment = currentEnvironment;
         }
 
         public IConfiguration Configuration { get; }
+        public IHostingEnvironment _currentEnvironment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            if (_currentEnvironment.IsEnvironment("Testing"))
+            {
+                services.AddDbContext<NotesAPIContext>(options =>
+                  options.UseInMemoryDatabase("TestDB"));
+            }
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddSwaggerGen(c =>
