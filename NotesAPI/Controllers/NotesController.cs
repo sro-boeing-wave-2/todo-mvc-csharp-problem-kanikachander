@@ -31,18 +31,18 @@ namespace NotesAPI.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-                var note = await _noteService.GetNotes(title, label, isPinned);
-                if (note.Count() == 0)
+                var notes = await _noteService.GetNotes(title, label, isPinned);
+                if (notes.Count == 0)
                 {
                     return NotFound();
                 }
-                return Ok(note);
+                return Ok(notes);
             }
         }
 
         // GET: api/Notes/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetNotes([FromRoute] int id)
+        public async Task<IActionResult> GetNotesByID([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
@@ -127,7 +127,7 @@ namespace NotesAPI.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteNotes([FromQuery] string title)
+        public async Task<IActionResult> DeleteNotesByTitle([FromQuery] string title)
         {
             if (!ModelState.IsValid)
             {

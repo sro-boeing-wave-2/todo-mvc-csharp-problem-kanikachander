@@ -1,0 +1,17 @@
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI.Tests\bin\Debug\netcoreapp2.1\xunit.runner.visualstudio.dotnetcore.testadapter.dll
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI.Tests\bin\Debug\netcoreapp2.1\xunit.runner.reporters.netcoreapp10.dll
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI.Tests\bin\Debug\netcoreapp2.1\xunit.runner.utility.netcoreapp10.dll
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI.Tests\bin\Debug\netcoreapp2.1\NotesAPI.Tests.deps.json
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI.Tests\bin\Debug\netcoreapp2.1\NotesAPI.Tests.runtimeconfig.json
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI.Tests\bin\Debug\netcoreapp2.1\NotesAPI.Tests.runtimeconfig.dev.json
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI.Tests\bin\Debug\netcoreapp2.1\NotesAPI.Tests.dll
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI.Tests\bin\Debug\netcoreapp2.1\NotesAPI.dll
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI.Tests\bin\Debug\netcoreapp2.1\NotesAPI.pdb
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI.Tests\obj\Debug\netcoreapp2.1\NotesAPI.Tests.csprojAssemblyReference.cache
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI.Tests\obj\Debug\netcoreapp2.1\NotesAPI.Tests.csproj.CoreCompileInputs.cache
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI.Tests\obj\Debug\netcoreapp2.1\NotesAPI.Tests.AssemblyInfoInputs.cache
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI.Tests\obj\Debug\netcoreapp2.1\NotesAPI.Tests.AssemblyInfo.cs
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI.Tests\obj\Debug\netcoreapp2.1\NotesAPI.Tests.csproj.CopyComplete
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI.Tests\bin\Debug\netcoreapp2.1\NotesAPI.Tests.pdb
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI.Tests\obj\Debug\netcoreapp2.1\NotesAPI.Tests.dll
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI.Tests\obj\Debug\netcoreapp2.1\NotesAPI.Tests.pdb

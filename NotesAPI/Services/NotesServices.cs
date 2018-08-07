@@ -35,9 +35,8 @@ namespace NotesAPI.Services
 
         public Task<List<Notes>> GetNotes(string title, string label, bool? isPinned)
         {
-            var note = _context.Notes.Include(p => p.Label).Include(p => p.CheckedList)
-                .Where(p => (p.Title == title || title == null) && (p.Pinned == isPinned || !isPinned.HasValue) && (p.Label.Any(y => y.Label == label) || label == null)).ToList();
-            return Task.FromResult(note);
+            return _context.Notes.Include(p => p.Label).Include(p => p.CheckedList)
+                .Where(p => (p.Title == title || title == null) && (p.Pinned == isPinned || !isPinned.HasValue) && (p.Label.Any(y => y.Label == label) || label == null)).ToListAsync();
         }
 
         public Task<Notes> PostNotes(Notes note)
