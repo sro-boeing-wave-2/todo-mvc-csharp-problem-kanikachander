@@ -55,7 +55,11 @@ namespace NotesAPI.Services
 
         public Task<Notes> DeleteNotes(int id)
         {
-            var note = _context.Notes.Include(p => p.Label).Include(p => p.CheckedList).First(p => p.ID == id);
+            var note = _context.Notes.Include(p => p.Label).Include(p => p.CheckedList).SingleOrDefault(p => p.ID == id);
+            if(note == null)
+            {
+                return Task.FromResult(note);
+            }
             _context.Notes.Remove(note);
             _context.SaveChanges();
             return Task.FromResult(note);
@@ -64,6 +68,10 @@ namespace NotesAPI.Services
         public Task<List<Notes>> DeleteNotesByTitle(string title)
         {
             var notes = _context.Notes.Include(p => p.Label).Include(p => p.CheckedList).Where(p => p.Title == title).ToList();
+            if (notes == null)
+            {
+                return Task.FromResult(notes);
+            }
             foreach (var i in notes)
             {
                 _context.Notes.Remove(i);
