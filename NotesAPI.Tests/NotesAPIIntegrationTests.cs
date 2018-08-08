@@ -56,14 +56,14 @@ namespace NotesAPI.Tests
             var jsonObj = JsonConvert.DeserializeObject<Note>(responseString);
 
             response.EnsureSuccessStatusCode();
-            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            //Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            response.StatusCode.Should().Be(HttpStatusCode.Created);
             jsonObj.Title.Should().Be("My fifth note");
-            Assert.Equal("Writing my fifth note", jsonObj.Text);
-            Assert.False(jsonObj.Pinned);
-            Assert.Equal("Work", jsonObj.Labels[0].LabelName);
-            Assert.Equal("Play", jsonObj.Labels[1].LabelName);
-            Assert.Equal("Pen", jsonObj.CheckedList[0].ListItem);
-            Assert.Equal("Bag", jsonObj.CheckedList[1].ListItem);
+            jsonObj.Text.Should().Be("Writing my fifth note");
+            jsonObj.Labels[0].LabelName.Should().Be("Work");
+            jsonObj.Labels[1].LabelName.Should().Be("Play");
+            jsonObj.CheckedList[0].ListItem.Should().Be("Pen");
+            jsonObj.CheckedList[1].ListItem.Should().Be("Bag");
         }
 
 
@@ -71,8 +71,8 @@ namespace NotesAPI.Tests
         public async void Test_Get_Note_By_ID_Negative_IT()
         {
             var responseGet = await _client.GetAsync("api/notes/999");
-            
-            Assert.Equal(HttpStatusCode.NotFound, responseGet.StatusCode);
+            responseGet.StatusCode.Should().Be(HttpStatusCode.NotFound);
+            //Assert.Equal(HttpStatusCode.NotFound, responseGet.StatusCode);
         }
 
         [Fact]
@@ -83,8 +83,10 @@ namespace NotesAPI.Tests
             var jsonObj = JsonConvert.DeserializeObject<Note>(responseString);
 
             responseGet.EnsureSuccessStatusCode();
-            Assert.Equal(HttpStatusCode.OK, responseGet.StatusCode);
-            Assert.Equal(1, jsonObj.ID);
+            responseGet.StatusCode.Should().Be(HttpStatusCode.OK);
+            jsonObj.ID.Should().Be(1);
+            //Assert.Equal(HttpStatusCode.OK, responseGet.StatusCode);
+            //Assert.Equal(1, jsonObj.ID);
         }
 
 
@@ -96,14 +98,22 @@ namespace NotesAPI.Tests
             var jsonObj = JsonConvert.DeserializeObject<List<Note>>(responseString);
 
             responseGet.EnsureSuccessStatusCode();
-            Assert.Equal(HttpStatusCode.OK, responseGet.StatusCode);
-            Assert.Equal("My first note", jsonObj[0].Title);
-            Assert.Equal("Writing my first note", jsonObj[0].Text);
-            Assert.False(jsonObj[0].Pinned);
-            Assert.Equal("Work", jsonObj[0].Labels[0].LabelName);
-            Assert.Equal("Play", jsonObj[0].Labels[1].LabelName);
-            Assert.Equal("Pen", jsonObj[0].CheckedList[0].ListItem);
-            Assert.Equal("Bag", jsonObj[0].CheckedList[1].ListItem);
+            responseGet.StatusCode.Should().Be(HttpStatusCode.OK);
+            jsonObj[0].Title.Should().Be("My first note");
+            jsonObj[0].Text.Should().Be("Writing my first note");
+            jsonObj[0].Labels[0].LabelName.Should().Be("Work");
+            jsonObj[0].Labels[1].LabelName.Should().Be("Play");
+            jsonObj[0].CheckedList[0].ListItem.Should().Be("Pen");
+            jsonObj[0].CheckedList[1].ListItem.Should().Be("Bag");
+
+            //Assert.Equal(HttpStatusCode.OK, responseGet.StatusCode);
+            //Assert.Equal("My first note", jsonObj[0].Title);
+            //Assert.Equal("Writing my first note", jsonObj[0].Text);
+            //Assert.False(jsonObj[0].Pinned);
+            //Assert.Equal("Work", jsonObj[0].Labels[0].LabelName);
+            //Assert.Equal("Play", jsonObj[0].Labels[1].LabelName);
+            //Assert.Equal("Pen", jsonObj[0].CheckedList[0].ListItem);
+            //Assert.Equal("Bag", jsonObj[0].CheckedList[1].ListItem);
         }
 
         [Fact]
@@ -114,16 +124,18 @@ namespace NotesAPI.Tests
             var jsonObj = JsonConvert.DeserializeObject<List<Note>>(responseString);
 
             responseGet.EnsureSuccessStatusCode();
-            Assert.Equal(HttpStatusCode.OK, responseGet.StatusCode);
-            Assert.Equal("My first note", jsonObj[0].Title);
+            responseGet.StatusCode.Should().Be(HttpStatusCode.OK);
+            jsonObj[0].Title.Should().Be("My first note");
+            //Assert.Equal(HttpStatusCode.OK, responseGet.StatusCode);
+            //Assert.Equal("My first note", jsonObj[0].Title);
         }
 
         [Fact]
         public async void Test_Get_Note_By_Title_Negative_IT()
         {
             var responseGet = await _client.GetAsync("api/notes?title=First note");
-            
-            Assert.Equal(HttpStatusCode.NotFound, responseGet.StatusCode);
+            responseGet.StatusCode.Should().Be(HttpStatusCode.NotFound);
+            //Assert.Equal(HttpStatusCode.NotFound, responseGet.StatusCode);
         }
 
 
@@ -135,8 +147,9 @@ namespace NotesAPI.Tests
             var jsonObj = JsonConvert.DeserializeObject<List<Note>>(responseString);
 
             responseGet.EnsureSuccessStatusCode();
-            Assert.Equal(HttpStatusCode.OK, responseGet.StatusCode);
-            Assert.Equal("Work", jsonObj[0].Labels[0].LabelName);
+            responseGet.StatusCode.Should().Be(HttpStatusCode.OK);
+            jsonObj[0].Labels[0].LabelName.Should().Be("Work");
+            //Assert.Equal("Work", jsonObj[0].Labels[0].LabelName);
         }
 
         [Fact]
@@ -164,7 +177,7 @@ namespace NotesAPI.Tests
             var response = await _client.PostAsync("api/notes", stringContent);
             var responseGet = await _client.GetAsync("api/notes?label=note");
 
-            Assert.Equal(HttpStatusCode.NotFound, responseGet.StatusCode);
+            responseGet.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
 
@@ -176,8 +189,9 @@ namespace NotesAPI.Tests
             var jsonObj = JsonConvert.DeserializeObject<List<Note>>(responseString);
 
             responseGet.EnsureSuccessStatusCode();
-            Assert.Equal(HttpStatusCode.OK, responseGet.StatusCode);
-            Assert.False(jsonObj[0].Pinned);
+            responseGet.StatusCode.Should().Be(HttpStatusCode.OK);
+            jsonObj[0].Pinned.Should().BeFalse();
+            //Assert.False(jsonObj[0].Pinned);
         }
         
 
@@ -229,14 +243,23 @@ namespace NotesAPI.Tests
             var jsonObj = JsonConvert.DeserializeObject<Note>(responseString);
 
             response.EnsureSuccessStatusCode();
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal("Second note", jsonObj.Title);
-            Assert.Equal("Writing my second note", jsonObj.Text);
-            Assert.True(jsonObj.Pinned);
-            Assert.Equal("Work", jsonObj.Labels[0].LabelName);
-            Assert.Equal("Priority", jsonObj.Labels[1].LabelName);
-            Assert.Equal("Paper", jsonObj.CheckedList[0].ListItem);
-            Assert.Equal("Bag", jsonObj.CheckedList[1].ListItem);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            jsonObj.Title.Should().Be("Second note");
+            jsonObj.Text.Should().Be("Writing my second note");
+            jsonObj.Labels[0].LabelName.Should().Be("Work");
+            jsonObj.Labels[1].LabelName.Should().Be("Priority");
+            jsonObj.CheckedList[0].ListItem.Should().Be("Paper");
+            jsonObj.CheckedList[1].ListItem.Should().Be("Bag");
+
+            //response.EnsureSuccessStatusCode();
+            //Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            //Assert.Equal("Second note", jsonObj.Title);
+            //Assert.Equal("Writing my second note", jsonObj.Text);
+            //Assert.True(jsonObj.Pinned);
+            //Assert.Equal("Work", jsonObj.Labels[0].LabelName);
+            //Assert.Equal("Priority", jsonObj.Labels[1].LabelName);
+            //Assert.Equal("Paper", jsonObj.CheckedList[0].ListItem);
+            //Assert.Equal("Bag", jsonObj.CheckedList[1].ListItem);
         }
 
         [Fact]
@@ -267,7 +290,7 @@ namespace NotesAPI.Tests
             response.EnsureSuccessStatusCode();
 
             var responseGet = await _client.GetAsync("api/notes/3");
-            Assert.Equal(HttpStatusCode.NotFound, responseGet.StatusCode);
+            responseGet.StatusCode.Should().Be(HttpStatusCode.NotFound);
 
         }
         
@@ -300,7 +323,7 @@ namespace NotesAPI.Tests
             response.EnsureSuccessStatusCode();
 
             var responseGet = await _client.GetAsync("api/notes?title=My fourth note");
-            Assert.Equal(HttpStatusCode.NotFound, responseGet.StatusCode);
+            responseGet.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
         
     }
