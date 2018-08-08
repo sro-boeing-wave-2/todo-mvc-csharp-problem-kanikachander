@@ -13,6 +13,6 @@ namespace NotesAPI.Models
         {
         }
 
-        public DbSet<NotesAPI.Models.Notes> Notes { get; set; }
+        public DbSet<Note> Note { get; set; }
     }
 }

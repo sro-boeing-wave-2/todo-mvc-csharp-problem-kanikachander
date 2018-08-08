@@ -62,7 +62,7 @@ namespace NotesAPI.Controllers
 
         // PUT: api/Notes/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutNotes([FromRoute] int id, [FromBody] Notes notes)
+        public async Task<IActionResult> PutNotes([FromRoute] int id, [FromBody] Note notes)
         {
             if (!ModelState.IsValid)
             {
@@ -96,7 +96,7 @@ namespace NotesAPI.Controllers
 
         // POST: api/Notes
         [HttpPost]
-        public async Task<IActionResult> PostNotes([FromBody] Notes notes)
+        public async Task<IActionResult> PostNotes([FromBody] Note notes)
         {
             if (!ModelState.IsValid)
             {

@@ -9,6 +9,7 @@ using NotesAPI.Models;
 using Newtonsoft.Json;
 using System.Net;
 using Newtonsoft.Json.Linq;
+using FluentAssertions;
 
 namespace NotesAPI.Tests
 {
@@ -31,36 +32,36 @@ namespace NotesAPI.Tests
         [Fact]
         public async void Test_Post_IT()
         {
-            var note = new Notes()
+            var note = new Note()
             {
                 ID = 5,
                 Title = "My fifth note",
                 Text = "Writing my fifth note",
                 Pinned = false,
-                Label = new List<Labels>
+                Labels = new List<Label>
         {
-            new Labels { ID = 9, Label = "Work"},
-            new Labels { ID = 10, Label = "Play"}
+            new Label { ID = 9, LabelName = "Work"},
+            new Label { ID = 10, LabelName = "Play"}
         },
-                CheckedList = new List<CheckedList>
+                CheckedList = new List<CheckedListItem>
         {
-            new CheckedList { ID = 9,ListItem = "Pen"},
-            new CheckedList { ID = 10, ListItem = "Bag"}
+            new CheckedListItem { ID = 9,ListItem = "Pen"},
+            new CheckedListItem { ID = 10, ListItem = "Bag"}
         }
             };
 
             var stringContent = new StringContent(JsonConvert.SerializeObject(note), UnicodeEncoding.UTF8, "application/json");
             var response = await _client.PostAsync("api/notes", stringContent);
             var responseString = await response.Content.ReadAsStringAsync();
-            var jsonObj = JsonConvert.DeserializeObject<Notes>(responseString);
+            var jsonObj = JsonConvert.DeserializeObject<Note>(responseString);
 
             response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-            Assert.Equal("My fifth note", jsonObj.Title);
+            jsonObj.Title.Should().Be("My fifth note");
             Assert.Equal("Writing my fifth note", jsonObj.Text);
             Assert.False(jsonObj.Pinned);
-            Assert.Equal("Work", jsonObj.Label[0].Label);
-            Assert.Equal("Play", jsonObj.Label[1].Label);
+            Assert.Equal("Work", jsonObj.Labels[0].LabelName);
+            Assert.Equal("Play", jsonObj.Labels[1].LabelName);
             Assert.Equal("Pen", jsonObj.CheckedList[0].ListItem);
             Assert.Equal("Bag", jsonObj.CheckedList[1].ListItem);
         }
@@ -79,7 +80,7 @@ namespace NotesAPI.Tests
         {
             var responseGet = await _client.GetAsync("api/notes/1");
             var responseString = await responseGet.Content.ReadAsStringAsync();
-            var jsonObj = JsonConvert.DeserializeObject<Notes>(responseString);
+            var jsonObj = JsonConvert.DeserializeObject<Note>(responseString);
 
             responseGet.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, responseGet.StatusCode);
@@ -92,15 +93,15 @@ namespace NotesAPI.Tests
         {
             var responseGet = await _client.GetAsync("api/notes");
             var responseString = await responseGet.Content.ReadAsStringAsync();
-            var jsonObj = JsonConvert.DeserializeObject<List<Notes>>(responseString);
+            var jsonObj = JsonConvert.DeserializeObject<List<Note>>(responseString);
 
             responseGet.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, responseGet.StatusCode);
             Assert.Equal("My first note", jsonObj[0].Title);
             Assert.Equal("Writing my first note", jsonObj[0].Text);
             Assert.False(jsonObj[0].Pinned);
-            Assert.Equal("Work", jsonObj[0].Label[0].Label);
-            Assert.Equal("Play", jsonObj[0].Label[1].Label);
+            Assert.Equal("Work", jsonObj[0].Labels[0].LabelName);
+            Assert.Equal("Play", jsonObj[0].Labels[1].LabelName);
             Assert.Equal("Pen", jsonObj[0].CheckedList[0].ListItem);
             Assert.Equal("Bag", jsonObj[0].CheckedList[1].ListItem);
         }
@@ -110,7 +111,7 @@ namespace NotesAPI.Tests
         {
             var responseGet = await _client.GetAsync("api/notes?title=My first note");
             var responseString = await responseGet.Content.ReadAsStringAsync();
-            var jsonObj = JsonConvert.DeserializeObject<List<Notes>>(responseString);
+            var jsonObj = JsonConvert.DeserializeObject<List<Note>>(responseString);
 
             responseGet.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, responseGet.StatusCode);
@@ -131,31 +132,31 @@ namespace NotesAPI.Tests
         {
             var responseGet = await _client.GetAsync("api/notes?label=Work");
             var responseString = await responseGet.Content.ReadAsStringAsync();
-            var jsonObj = JsonConvert.DeserializeObject<List<Notes>>(responseString);
+            var jsonObj = JsonConvert.DeserializeObject<List<Note>>(responseString);
 
             responseGet.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, responseGet.StatusCode);
-            Assert.Equal("Work", jsonObj[0].Label[0].Label);
+            Assert.Equal("Work", jsonObj[0].Labels[0].LabelName);
         }
 
         [Fact]
         public async void Test_Get_Note_By_Label_Negative_IT()
         {
-            var note = new Notes()
+            var note = new Note()
             {
                 ID = 1,
                 Title = "My first note",
                 Text = "Writing my first note",
                 Pinned = false,
-                Label = new List<Labels>
+                Labels = new List<Label>
         {
-            new Labels { ID = 1, Label = "Work"},
-            new Labels { ID = 2, Label = "Play"}
+            new Label { ID = 1, LabelName = "Work"},
+            new Label { ID = 2, LabelName = "Play"}
         },
-                CheckedList = new List<CheckedList>
+                CheckedList = new List<CheckedListItem>
         {
-            new CheckedList { ID = 1,ListItem = "Pen"},
-            new CheckedList { ID = 2, ListItem = "Bag"}
+            new CheckedListItem { ID = 1,ListItem = "Pen"},
+            new CheckedListItem { ID = 2, ListItem = "Bag"}
         }
             };
 
@@ -172,7 +173,7 @@ namespace NotesAPI.Tests
         {
             var responseGet = await _client.GetAsync("api/notes?isPinned=false");
             var responseString = await responseGet.Content.ReadAsStringAsync();
-            var jsonObj = JsonConvert.DeserializeObject<List<Notes>>(responseString);
+            var jsonObj = JsonConvert.DeserializeObject<List<Note>>(responseString);
 
             responseGet.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, responseGet.StatusCode);
@@ -183,57 +184,57 @@ namespace NotesAPI.Tests
         [Fact]
         public async void Test_Put_IT()
         {
-            var note = new Notes()
+            var note = new Note()
             {
                 ID = 2,
                 Title = "My second note",
                 Text = "Writing my second note",
                 Pinned = false,
-                Label = new List<Labels>
+                Labels = new List<Label>
         {
-            new Labels { ID = 3, Label = "Work"},
-            new Labels { ID = 4, Label = "Priority"}
+            new Label { ID = 3, LabelName = "Work"},
+            new Label { ID = 4, LabelName = "Priority"}
         },
-                CheckedList = new List<CheckedList>
+                CheckedList = new List<CheckedListItem>
         {
-            new CheckedList { ID = 3,ListItem = "Watch"},
-            new CheckedList { ID = 4, ListItem = "Bag"}
+            new CheckedListItem { ID = 3,ListItem = "Watch"},
+            new CheckedListItem { ID = 4, ListItem = "Bag"}
         }
             };
 
             var stringContent = new StringContent(JsonConvert.SerializeObject(note), UnicodeEncoding.UTF8, "application/json");
             var responsePost = await _client.PostAsync("api/notes", stringContent);
 
-            var notePut = new Notes()
+            var notePut = new Note()
             {
                 ID = 2,
                 Title = "Second note",
                 Text = "Writing my second note",
                 Pinned = true,
-                Label = new List<Labels>
+                Labels = new List<Label>
         {
-            new Labels { ID = 3, Label = "Work"},
-            new Labels { ID = 4, Label = "Priority"}
+            new Label { ID = 3, LabelName = "Work"},
+            new Label { ID = 4, LabelName = "Priority"}
         },
-                CheckedList = new List<CheckedList>
+                CheckedList = new List<CheckedListItem>
         {
-            new CheckedList { ID = 3,ListItem = "Paper"},
-            new CheckedList { ID = 4, ListItem = "Bag"}
+            new CheckedListItem { ID = 3,ListItem = "Paper"},
+            new CheckedListItem { ID = 4, ListItem = "Bag"}
         }
             };
 
             var stringContentPut = new StringContent(JsonConvert.SerializeObject(notePut), UnicodeEncoding.UTF8, "application/json");
             var response = await _client.PutAsync("api/notes/2", stringContentPut);
             var responseString = await response.Content.ReadAsStringAsync();
-            var jsonObj = JsonConvert.DeserializeObject<Notes>(responseString);
+            var jsonObj = JsonConvert.DeserializeObject<Note>(responseString);
 
             response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.Equal("Second note", jsonObj.Title);
             Assert.Equal("Writing my second note", jsonObj.Text);
             Assert.True(jsonObj.Pinned);
-            Assert.Equal("Work", jsonObj.Label[0].Label);
-            Assert.Equal("Priority", jsonObj.Label[1].Label);
+            Assert.Equal("Work", jsonObj.Labels[0].LabelName);
+            Assert.Equal("Priority", jsonObj.Labels[1].LabelName);
             Assert.Equal("Paper", jsonObj.CheckedList[0].ListItem);
             Assert.Equal("Bag", jsonObj.CheckedList[1].ListItem);
         }
@@ -241,21 +242,21 @@ namespace NotesAPI.Tests
         [Fact]
         public async void Test_Delete_Note_By_ID_IT()
         {
-            var note = new Notes()
+            var note = new Note()
             {
                 ID = 3,
                 Title = "My third note",
                 Text = "Writing my third note",
                 Pinned = true,
-                Label = new List<Labels>
+                Labels = new List<Label>
         {
-            new Labels { ID = 5, Label = "Work"},
-            new Labels { ID = 6, Label = "Archive"}
+            new Label { ID = 5, LabelName = "Work"},
+            new Label { ID = 6, LabelName = "Archive"}
         },
-                CheckedList = new List<CheckedList>
+                CheckedList = new List<CheckedListItem>
         {
-            new CheckedList { ID = 5,ListItem = "Watch"},
-            new CheckedList { ID = 6, ListItem = "Bag"}
+            new CheckedListItem { ID = 5,ListItem = "Watch"},
+            new CheckedListItem { ID = 6, ListItem = "Bag"}
         }
             };
 
@@ -274,21 +275,21 @@ namespace NotesAPI.Tests
         [Fact]
         public async void Test_Delete_Note_By_Title_IT()
         {
-            var note = new Notes()
+            var note = new Note()
             {
                 ID = 4,
                 Title = "My fourth note",
                 Text = "Writing my fourth note",
                 Pinned = true,
-                Label = new List<Labels>
+                Labels = new List<Label>
         {
-            new Labels { ID = 7, Label = "Important"},
-            new Labels { ID = 8, Label = "Archive"}
+            new Label { ID = 7, LabelName = "Important"},
+            new Label { ID = 8, LabelName = "Archive"}
         },
-                CheckedList = new List<CheckedList>
+                CheckedList = new List<CheckedListItem>
         {
-            new CheckedList { ID = 7,ListItem = "Bike"},
-            new CheckedList { ID = 8, ListItem = "Car"}
+            new CheckedListItem { ID = 7,ListItem = "Bike"},
+            new CheckedListItem { ID = 8, ListItem = "Car"}
         }
             };
 

@@ -14,89 +14,89 @@ namespace NotesAPI.Tests
 {
     public class NotesAPITests
     {
-        public Task<Notes> DataNotes()
+        public Task<Note> DataNotes()
         {
-            var notes = new Notes()
+            var notes = new Note()
             {
                 ID = 1,
                 Title = "My first note",
                 Text = "Writing my first note",
                 Pinned = true,
-                Label = new List<Labels>
+                Labels = new List<Label>
                     {
-                        new Labels { ID = 1, Label = "Work"},
-                        new Labels { ID = 2, Label = "Important"}
+                        new Label { ID = 1, LabelName = "Work"},
+                        new Label { ID = 2, LabelName = "Important"}
                     },
-                CheckedList = new List<CheckedList>
+                CheckedList = new List<CheckedListItem>
                     {
-                        new CheckedList { ID = 1, ListItem = "Laptop"},
-                        new CheckedList { ID = 2, ListItem = "Bag"}
+                        new CheckedListItem { ID = 1, ListItem = "Laptop"},
+                        new CheckedListItem { ID = 2, ListItem = "Bag"}
                     }
             };
             return Task.FromResult(notes);
         }
 
-        public Task<List<Notes>> DataNotesList()
+        public Task<List<Note>> DataNotesList()
         {
-            var notes = new List<Notes>()
+            var notes = new List<Note>()
                 {
-                    new Notes()
+                    new Note()
                     {
                         ID = 1,
                         Title = "My first note",
                     Text = "Writing my first note",
                     Pinned = true,
-                    Label = new List<Labels>
+                    Labels = new List<Label>
                     {
-                        new Labels { ID = 1, Label = "Archive"},
-                        new Labels { ID = 2, Label = "Work"}
+                        new Label { ID = 1, LabelName = "Archive"},
+                        new Label { ID = 2, LabelName = "Work"}
                     },
-                    CheckedList = new List<CheckedList>
+                    CheckedList = new List<CheckedListItem>
                     {
-                        new CheckedList { ID = 1, ListItem = "Charger"},
-                        new CheckedList { ID = 2, ListItem = "Pen"}
+                        new CheckedListItem { ID = 1, ListItem = "Charger"},
+                        new CheckedListItem { ID = 2, ListItem = "Pen"}
                     }
                     },
-                    new Notes()
+                    new Note()
                     {
                         ID = 2,
                         Title = "My second note",
                     Text = "Writing my first note",
                     Pinned = false,
-                    Label = new List<Labels>
+                    Labels = new List<Label>
                     {
-                        new Labels { ID = 3, Label = "Archive"},
-                        new Labels { ID = 4, Label = "Priority"}
+                        new Label { ID = 3, LabelName = "Archive"},
+                        new Label { ID = 4, LabelName = "Priority"}
                     },
-                    CheckedList = new List<CheckedList>
+                    CheckedList = new List<CheckedListItem>
                     {
-                        new CheckedList { ID = 3, ListItem = "Laptop"},
-                        new CheckedList { ID = 4, ListItem = "Bag"}
+                        new CheckedListItem { ID = 3, ListItem = "Laptop"},
+                        new CheckedListItem { ID = 4, ListItem = "Bag"}
                     }
                     }
                 };
             return Task.FromResult(notes);
         }
 
-        public Task<List<Notes>> DataSingleList()
+        public Task<List<Note>> DataSingleList()
         {
-            var notes = new List<Notes>()
+            var notes = new List<Note>()
             {
-                new Notes()
+                new Note()
                 {
                     ID = 1,
                     Title = "First note",
                     Text = "Writing my first note",
                     Pinned = true,
-                    Label = new List<Labels>
+                    Labels = new List<Label>
                     {
-                        new Labels { ID = 1, Label = "Archive"},
-                        new Labels { ID = 2, Label = "Work"}
+                        new Label { ID = 1, LabelName = "Archive"},
+                        new Label { ID = 2, LabelName = "Work"}
                     },
-                    CheckedList = new List<CheckedList>
+                    CheckedList = new List<CheckedListItem>
                     {
-                        new CheckedList { ID = 1, ListItem = "Charger"},
-                        new CheckedList { ID = 2, ListItem = "Pen"}
+                        new CheckedListItem { ID = 1, ListItem = "Charger"},
+                        new CheckedListItem { ID = 2, ListItem = "Pen"}
                     }
                 }
             };
@@ -112,7 +112,7 @@ namespace NotesAPI.Tests
 
             var result = await controller.GetNotes("", "", null);
             var okObjectResult = result as OkObjectResult;
-            var notes = okObjectResult.Value as List<Notes>;          
+            var notes = okObjectResult.Value as List<Note>;          
             Assert.Equal(200, okObjectResult.StatusCode);
             Assert.Equal(2, notes.Count);
         }
@@ -126,7 +126,7 @@ namespace NotesAPI.Tests
 
             var result = await controller.GetNotes("First note", "", null);
             var okObjectResult = result as OkObjectResult;
-            var notes = okObjectResult.Value as List<Notes>;
+            var notes = okObjectResult.Value as List<Note>;
             Assert.Equal(200, okObjectResult.StatusCode);
             Assert.Equal("First note", notes[0].Title);
         }
@@ -141,9 +141,9 @@ namespace NotesAPI.Tests
 
             var result = await controller.GetNotes("", "Work", null);
             var okObjectResult = result as OkObjectResult;
-            var notes = okObjectResult.Value as List<Notes>;
+            var notes = okObjectResult.Value as List<Note>;
             Assert.Equal(200, okObjectResult.StatusCode);
-            Assert.Equal("Work", notes[0].Label[1].Label);
+            Assert.Equal("Work", notes[0].Labels[1].LabelName);
         }
 
         [Fact]
@@ -154,7 +154,7 @@ namespace NotesAPI.Tests
             var controller = new NotesController(testMock.Object);
             var result = await controller.GetNotesByID(1);
             var okObjectResult = result as OkObjectResult;
-            var notes = okObjectResult.Value as Notes;
+            var notes = okObjectResult.Value as Note;
             Assert.Equal(200, okObjectResult.StatusCode);
             Assert.Equal(1, notes.ID);
         }
@@ -168,7 +168,7 @@ namespace NotesAPI.Tests
 
             var result = await controller.GetNotes("", "", true);
             var okObjectResult = result as OkObjectResult;
-            var notes = okObjectResult.Value as List<Notes>;
+            var notes = okObjectResult.Value as List<Note>;
             Assert.Equal(200, okObjectResult.StatusCode);
             Assert.True(notes[0].Pinned);
         }
@@ -176,21 +176,21 @@ namespace NotesAPI.Tests
         [Fact]
         public async void TestPostNote()
         {
-            var note = new Notes()
+            var note = new Note()
             {
                 ID = 3,
                 Title = "My third note",
                 Text = "Writing my third note",
                 Pinned = false,
-                Label = new List<Labels>
+                Labels = new List<Label>
                 {
-                    new Labels { ID = 1, Label = "Work"},
-                    new Labels { ID = 2, Label = "Play"}
+                    new Label { ID = 1, LabelName = "Work"},
+                    new Label { ID = 2, LabelName = "Play"}
                 },
-                CheckedList = new List<CheckedList>
+                CheckedList = new List<CheckedListItem>
                 {
-                    new CheckedList { ID = 1, ListItem = "Pen"},
-                    new CheckedList { ID = 2, ListItem = "Bag"}
+                    new CheckedListItem { ID = 1, ListItem = "Pen"},
+                    new CheckedListItem { ID = 2, ListItem = "Bag"}
                 }
             };
             
@@ -200,7 +200,7 @@ namespace NotesAPI.Tests
 
             var result = await controller.PostNotes(note);
             var okObjectResult = result as CreatedAtActionResult;
-            var notes = okObjectResult.Value as Notes;
+            var notes = okObjectResult.Value as Note;
             Assert.Equal(201, okObjectResult.StatusCode);
             Assert.NotNull(notes);
         }
@@ -208,22 +208,22 @@ namespace NotesAPI.Tests
         [Fact]
         public async void TestPutNote()
         {
-            var note = new Notes()
+            var note = new Note()
             {
 
                 ID = 4,
                 Title = "My fourth note",
                 Text = "Writing my fourth note",
                 Pinned = false,
-                Label = new List<Labels>
+                Labels = new List<Label>
                     {
-                        new Labels { ID = 1, Label = "Work"},
-                        new Labels { ID = 2, Label = "Play"}
+                        new Label { ID = 1, LabelName = "Work"},
+                        new Label { ID = 2, LabelName = "Play"}
                     },
-                CheckedList = new List<CheckedList>
+                CheckedList = new List<CheckedListItem>
                     {
-                        new CheckedList { ID = 1, ListItem = "Pen"},
-                        new CheckedList { ID = 2, ListItem = "Bag"}
+                        new CheckedListItem { ID = 1, ListItem = "Pen"},
+                        new CheckedListItem { ID = 2, ListItem = "Bag"}
                     }
             };
 
@@ -233,7 +233,7 @@ namespace NotesAPI.Tests
 
             var result = await controller.PutNotes(4, note);
             var okObjectResult = result as OkObjectResult;
-            var notes = okObjectResult.Value as Notes;
+            var notes = okObjectResult.Value as Note;
             Assert.Equal(200, okObjectResult.StatusCode);
             Assert.NotNull(notes);
         }
@@ -246,7 +246,7 @@ namespace NotesAPI.Tests
             var controller = new NotesController(testMock.Object);
             var result = await controller.DeleteNotes(1);
             var okObjectResult = result as OkObjectResult;
-            var notes = okObjectResult.Value as Notes;
+            var notes = okObjectResult.Value as Note;
             Assert.Equal(200, okObjectResult.StatusCode);
             Assert.Equal(1, notes.ID);
         }
@@ -259,7 +259,7 @@ namespace NotesAPI.Tests
             var controller = new NotesController(testMock.Object);
             var result = await controller.DeleteNotesByTitle("My first note");
             var okObjectResult = result as OkObjectResult;
-            var notes = okObjectResult.Value as List<Notes>;
+            var notes = okObjectResult.Value as List<Note>;
             Assert.Equal(200, okObjectResult.StatusCode);
             Assert.Equal("My first note", notes[0].Title);
         }
