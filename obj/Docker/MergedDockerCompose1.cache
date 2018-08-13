@@ -1,0 +1,39 @@
+networks:
+  default:
+    external:
+      name: nat
+services:
+  notesapi:
+    build:
+      context: E:\workspace\todo-mvc-csharp-problem-kanikachander
+      dockerfile: NotesAPI\Dockerfile
+      target: base
+    entrypoint: C:\\remote_debugger\\x64\\msvsmon.exe /noauth /anyuser /silent /nostatus
+      /noclrwarn /nosecuritywarn /nofirewallwarn /nowowwarn /timeout:2147483646
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: https://+:443;http://+:80
+      DOTNET_USE_POLLING_FILE_WATCHER: '1'
+      NUGET_FALLBACK_PACKAGES: c:\.nuget\fallbackpackages
+      NUGET_PACKAGES: C:\.nuget\packages
+    image: notesapi:dev
+    labels:
+      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath c:\.nuget\packages
+        --additionalProbingPath c:\.nuget\fallbackpackages  bin\Debug\netcoreapp2.1\NotesAPI.dll'
+      com.microsoft.visualstudio.debuggee.killprogram: C:\remote_debugger\x64\utils\KillProcess.exe
+        dotnet.exe
+      com.microsoft.visualstudio.debuggee.program: '"C:\Program Files\dotnet\dotnet.exe"'
+      com.microsoft.visualstudio.debuggee.workingdirectory: C:\app
+    ports:
+    - published: 50817
+      target: 80
+    - published: 44324
+      target: 443
+    volumes:
+    - /c/Users/Admin/AppData/Roaming/ASP.NET/Https:C:\Users\ContainerUser\AppData\Roaming\ASP.NET\Https:ro
+    - /c/Users/Admin/AppData/Roaming/Microsoft/UserSecrets:C:\Users\ContainerUser\AppData\Roaming\Microsoft\UserSecrets:ro
+    - /e/workspace/todo-mvc-csharp-problem-kanikachander/NotesAPI:C:\app:rw
+    - /c/Users/Admin/onecoremsvsmon/15.0.27703.2026:C:\remote_debugger:ro
+    - /c/Program Files/dotnet/sdk/NuGetFallbackFolder:c:\.nuget\fallbackpackages:ro
+    - /c/Users/Admin/.nuget/packages:c:\.nuget\packages:ro
+version: '3.4'

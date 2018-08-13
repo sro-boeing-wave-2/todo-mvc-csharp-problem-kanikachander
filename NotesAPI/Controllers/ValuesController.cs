@@ -14,6 +14,7 @@ namespace NotesAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
+            Console.WriteLine("Printing Values");
             return new string[] { "value1", "value2" };
         }
 

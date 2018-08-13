@@ -36,6 +36,11 @@ namespace NotesAPI
                 services.AddDbContext<NotesAPIContext>(options =>
                   options.UseInMemoryDatabase("TestDB"));
             }
+            
+                services.AddDbContext<NotesAPIContext>(options =>
+                 options.UseSqlServer(Configuration.GetConnectionString("NotesAPIContext"), 
+                 dbOptions => dbOptions.EnableRetryOnFailure(maxRetryCount: 10, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd:null)));
+            
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -44,14 +49,13 @@ namespace NotesAPI
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
             });
 
-            services.AddDbContext<NotesAPIContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("NotesAPIContext")));
+            
 
             services.AddScoped<INotesServices, NotesServices>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, NotesAPIContext context)
         {
             if (env.IsDevelopment())
             {
@@ -73,6 +77,7 @@ namespace NotesAPI
             });
 
             app.UseHttpsRedirection();
+            context.Database.Migrate();
             app.UseMvc();
         }
     }
