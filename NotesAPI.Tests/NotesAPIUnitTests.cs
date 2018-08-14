@@ -228,7 +228,7 @@ namespace NotesAPI.Tests
             };
 
             var testMock = new Mock<INotesServices>();
-            testMock.Setup(x => x.PutNotes(note)).Returns(Task.FromResult(note));
+            testMock.Setup(x => x.PutNotes(4, note)).Returns(Task.FromResult(note));
             var controller = new NotesController(testMock.Object);
 
             var result = await controller.PutNotes(4, note);

@@ -12,3 +12,4 @@ E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI\obj\Debug\netcoreapp
 E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI\bin\Debug\netcoreapp2.1\NotesAPI.pdb
 E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI\obj\Debug\netcoreapp2.1\NotesAPI.dll
 E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI\obj\Debug\netcoreapp2.1\NotesAPI.pdb
+E:\workspace\todo-mvc-csharp-problem-kanikachander\NotesAPI\obj\Debug\netcoreapp2.1\UserSecretsAssemblyInfo.cs

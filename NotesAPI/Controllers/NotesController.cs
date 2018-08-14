@@ -32,10 +32,10 @@ namespace NotesAPI.Controllers
                     return BadRequest(ModelState);
                 }
                 var notes = await _noteService.GetNotes(title, label, isPinned);
-                if (notes.Count == 0)
-                {
-                    return NotFound();
-                }
+                //if (notes.Count == 0)
+                //{
+                //    return NotFound();
+                //}
                 return Ok(notes);
             }
         }
@@ -76,7 +76,7 @@ namespace NotesAPI.Controllers
 
             try
             {
-                await _noteService.PutNotes(notes);
+                await _noteService.PutNotes(id, notes);
             }
 
             catch (DbUpdateConcurrencyException)

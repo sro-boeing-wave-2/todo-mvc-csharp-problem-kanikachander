@@ -3725,6 +3725,19 @@
           "lib/netstandard1.5/MongoDB.Driver.Core.dll": {}
         }
       },
+      "MongoDB.Testing/1.0.0-beta-002": {
+        "type": "package",
+        "dependencies": {
+          "MongoDB.Driver": "2.3.0",
+          "System.Reflection": "4.1.0"
+        },
+        "compile": {
+          "lib/netstandard1.6/MongoDB.Testing.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.6/MongoDB.Testing.dll": {}
+        }
+      },
       "Moq/4.9.0": {
         "type": "package",
         "dependencies": {
@@ -6433,6 +6446,7 @@
           "Microsoft.NETCore.App": "2.1.0",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.1.1",
           "MongoDB.Driver": "2.7.0",
+          "MongoDB.Testing": "1.0.0-beta-002",
           "Swashbuckle.AspNetCore": "3.0.0",
           "mongocsharpdriver": "2.7.0"
         },
@@ -10125,6 +10139,17 @@
         "lib/netstandard1.5/MongoDB.Driver.Core.xml",
         "mongodb.driver.core.2.7.0.nupkg.sha512",
         "mongodb.driver.core.nuspec"
+      ]
+    },
+    "MongoDB.Testing/1.0.0-beta-002": {
+      "sha512": "KYqS9pMdW0ipOQhOeEdXbQ2KObOT8fibtNT6uIrtzWlzSryoe9JSeX6ZDN3o2h5VvOX6n7OL9hG47T8o2XgNxA==",
+      "type": "package",
+      "path": "mongodb.testing/1.0.0-beta-002",
+      "files": [
+        "lib/net451/MongoDB.Testing.dll",
+        "lib/netstandard1.6/MongoDB.Testing.dll",
+        "mongodb.testing.1.0.0-beta-002.nupkg.sha512",
+        "mongodb.testing.nuspec"
       ]
     },
     "Moq/4.9.0": {
@@ -16400,6 +16425,7 @@
             "version": "[15.7.0, )"
           },
           "Microsoft.NETCore.App": {
+            "suppressParent": "All",
             "target": "Package",
             "version": "[2.1.0, )",
             "autoReferenced": true

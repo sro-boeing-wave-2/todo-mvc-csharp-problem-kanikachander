@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using NotesAPI.Models;
 using System;
 using System.Collections.Generic;
@@ -12,7 +14,7 @@ namespace NotesAPI.Services
         Task<Note> GetNotesByID(int id);
         Task<List<Note>> GetNotes(string title, string label, bool? isPinned);
         Task<Note> PostNotes(Note note);
-        Task<Note> PutNotes(Note note);
+        Task<Note> PutNotes(int id, Note note);
         Task<Note> DeleteNotes(int id);
         Task<List<Note>> DeleteNotesByTitle(string title);
         bool NotesExist(int id);
@@ -22,14 +24,14 @@ namespace NotesAPI.Services
     {
         private readonly NotesAPIContext _context;
 
-        public NotesServices(NotesAPIContext context)
+        public NotesServices(IOptions<Settings> settings)
         {
-            _context = context;
+            _context = new NotesAPIContext(settings);
         }
 
         public async Task<Note> GetNotesByID(int id)
         {
-            var note = await _context.Note.Include(p => p.Labels).Include(p => p.CheckedList).SingleOrDefaultAsync(p => p.ID == id);
+            var note = await _context.Note.Find(p => p.ID == id).FirstOrDefaultAsync();
             return note;
         }
 
@@ -40,56 +42,57 @@ namespace NotesAPI.Services
                 && (p.Pinned == isPinned || !isPinned.HasValue)
                 && (p.Labels.Any(y => y.LabelName == label) || String.IsNullOrEmpty(label)));
 
-            var x = _context.Note.Include(p => p.Labels)
-                .Include(p => p.CheckedList)
-                .Where(NoteMatchesTitleOrLabelOrIsPinned).ToList();
+            var x = _context.Note.AsQueryable<Note>().Where(NoteMatchesTitleOrLabelOrIsPinned).ToList();
             return await Task.FromResult(x);
         }
 
         public async Task<Note> PostNotes(Note note)
         {
-            _context.Note.Add(note);
-            await _context.SaveChangesAsync();
+            await _context.Note.InsertOneAsync(note);
+            //await _context.SaveChangesAsync();
             return note;
         }
 
-        public async Task<Note> PutNotes(Note note)
+        public async Task<Note> PutNotes(int id, Note note)
         {
-            _context.Note.Update(note);
-            await _context.SaveChangesAsync();
+            var filter = Builders<Note>.Filter.Eq(p => p.ID,id);
+            var update = Builders<Note>.Update.Set(p => p.Title, note.Title)
+                .Set(p => p.Text, note.Text)
+                .Set(p => p.Labels, note.Labels)
+                .Set(p => p.Pinned, note.Pinned)
+                .Set(p => p.CheckedList, note.CheckedList);
+            await _context.Note.UpdateOneAsync(filter, update);
+            //await _context.SaveChangesAsync();
             return note;
         }
 
         public async Task<Note> DeleteNotes(int id)
         {
-            var note = _context.Note.Include(p => p.Labels).Include(p => p.CheckedList).SingleOrDefault(p => p.ID == id);
-            if(note == null)
+            var note = await _context.Note.Find(p => p.ID == id).FirstOrDefaultAsync();
+            if (note == null)
             {
                 return note;
             }
-            _context.Note.Remove(note);
-            await _context.SaveChangesAsync();
+            DeleteResult deleteResult = await _context.Note.DeleteOneAsync(Builders<Note>.Filter.Eq(p => p.ID, id));
+            
             return note;
         }
 
         public async Task<List<Note>> DeleteNotesByTitle(string title)
         {
-            var notes = _context.Note.Include(p => p.Labels).Include(p => p.CheckedList).Where(p => p.Title == title).ToList();
+            var notes = await _context.Note.Find(p => p.Title == title).ToListAsync();
             if (notes == null)
             {
                 return notes;
             }
-            foreach (var i in notes)
-            {
-                _context.Note.Remove(i);
-            }
-            await _context.SaveChangesAsync();
+            DeleteResult deleteResult = await _context.Note.DeleteManyAsync(Builders<Note>.Filter.Eq(p => p.Title, title));
+            //await _context.SaveChangesAsync();
             return notes;
         }
 
         public bool NotesExist(int id)
         {
-            return _context.Note.Any(e => e.ID == id);
+            return _context.Note.AsQueryable().Any(e => e.ID == id);
         }
     }
 }
